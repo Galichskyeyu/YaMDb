@@ -1,17 +1,85 @@
 from django.contrib import admin
-from .models import Comment, Review, Title, Category, Genre, GenreTitle, Titles
+
+from reviews.models import Category, Comment, Genre, GenreTitle, Review, Title
 
 
-class ReviewsAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'text', 'score', 'author', 'title')
-    search_fields = ('title', 'author')
-    list_filter = ('score', 'text',)
-    empty_value_display = '-пусто-'
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+        'slug',
+    )
+    empty_value_display = 'значение отсутствует'
+    list_filter = ('name',)
+    search_fields = ('name',)
 
 
-admin.site.register(Review, ReviewsAdmin)
-admin.site.register(Comment)
-admin.site.register(Titles)
-admin.site.register(Genre)
-admin.site.register(GenreTitle)
-admin.site.register(Category)
+@admin.register(Genre)
+class GenreAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+        'slug',
+    )
+    empty_value_display = 'значение отсутствует'
+    list_filter = ('name',)
+    search_fields = ('name',)
+
+
+class GenreInline(admin.TabularInline):
+    model = GenreTitle
+    extra = 2
+
+
+@admin.register(Title)
+class TitleAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'name',
+        'year',
+        'description',
+        'category',
+    )
+    inlines = (
+        GenreInline,
+    )
+    empty_value_display = 'значение отсутствует'
+    list_filter = ('name',)
+
+
+@admin.register(GenreTitle)
+class GenreTitleAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+    )
+    empty_value_display = 'значение отсутствует'
+
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'author',
+        'text',
+        'score',
+        'pub_date',
+        'title',
+    )
+    empty_value_display = 'значение отсутствует'
+    list_filter = ('author', 'score', 'pub_date')
+    search_fields = ('author',)
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = (
+        'pk',
+        'author',
+        'text',
+        'pub_date',
+        'review',
+    )
+    empty_value_display = 'значение отсутствует'
+    list_filter = ('author', 'pub_date')
+    search_fields = ('author',)

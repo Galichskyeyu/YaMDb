@@ -1,2 +1,1 @@
-# api_yamdb
-api_yamdb
+REST API для социальной сети блогеров Yatube.
