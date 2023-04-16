@@ -17,67 +17,68 @@ MODELS = {
 }
 
 
-class Command(BaseCommand):
+def objects_creator(model, row):
+    if model == User:
+        User.objects.get_or_create(
+            id=row['id'],
+            username=row['username'],
+            email=row['email'],
+            role=row['role'],
+            bio=row['bio'],
+            first_name=row['first_name'],
+            last_name=row['last_name']
+        )
+    if model == Category:
+        Category.objects.get_or_create(
+            id=row['id'],
+            name=row['name'],
+            slug=row['slug'],
+        )
+    if model == Comment:
+        Comment.objects.get_or_create(
+            id=row['id'],
+            review=Review.objects.get(id=row['review_id']),
+            text=row['text'],
+            author=User.objects.get(id=row['author']),
+            pub_date=row['pub_date'],
+        )
+    if model == Genre:
+        Genre.objects.get_or_create(
+            id=row['id'],
+            name=row['name'],
+            slug=row['slug'],
+        )
+    if model == GenreTitle:
+        GenreTitle.objects.get_or_create(
+            id=row['id'],
+            title=Title.objects.get(id=row['title_id']),
+            genre=Genre.objects.get(id=row['genre_id']),
+        )
+    if model == Review:
+        Review.objects.get_or_create(
+            id=row['id'],
+            title=Title.objects.get(id=row['title_id']),
+            text=row['text'],
+            author=User.objects.get(id=row['author']),
+            score=row['score'],
+            pub_date=row['pub_date'],
+        )
+    if model == Title:
+        Title.objects.get_or_create(
+            id=row['id'],
+            name=row['name'],
+            year=row['year'],
+            category=Category.objects.get(
+                id=row['category']
+            ),
+        )
 
-    def objects_creator(model, row, response):
-        if model == User:
-            User.objects.create(
-                id=row[0],
-                username=row[1],
-                email=row[2],
-                role=row[3],
-                bio=row[4],
-                first_name=row[5],
-                last_name=row[6]
-            )
-        if model == Category:
-            Category.objects.create(
-                id=row[0],
-                name=row[1],
-                slug=row[2],
-            )
-        if model == Comment:
-            Comment.objects.create(
-                id=row[0],
-                review=Review.objects.get(id=row[1]),
-                text=row[2],
-                author=User.objects.get(id=row[3]),
-                pub_date=row[4],
-            )
-        if model == Genre:
-            Genre.objects.create(
-                id=row[0],
-                name=row[1],
-                slug=row[2],
-            )
-        if model == GenreTitle:
-            GenreTitle.objects.create(
-                id=row[0],
-                title=Title.objects.get(id=row[1]),
-                genre=Genre.objects.get(id=row[2]),
-            )
-        if model == Review:
-            Review.objects.create(
-                id=row[0],
-                title=Title.objects.get(id=row[1]),
-                text=row[2],
-                author=User.objects.get(id=row[3]),
-                score=row[4],
-                pub_date=row[5],
-            )
-        if model == Title:
-            Title.objects.create(
-                id=row[0],
-                name=row[1],
-                year=row[2],
-                category=Category.objects.get(
-                    id=row[3]
-                ),
-            )
+
+class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for filename, model in MODELS.items():
             csv_file = find(f'data/{filename}.csv')
             for row in DictReader(open(csv_file, encoding='utf-8')):
-                self.objects_creator(model, row)
+                objects_creator(model, row)
             print('Новые объекты добавлены.')
