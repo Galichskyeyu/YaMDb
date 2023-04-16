@@ -49,15 +49,18 @@ class Title(models.Model):
 
 
 class GenreTitle(models.Model):
-    title_id = models.ForeignKey(
+    """Связь жанра и тайтла."""
+
+    genre = models.ForeignKey(
+        Genre,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name='Жанр',
+    )
+    title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
-        null=True,
-    )
-    genre_id = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE,
-        null=True,
+        verbose_name='Тайтл',
     )
 
 
