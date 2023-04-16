@@ -1,6 +1,4 @@
-import sys
 from csv import DictReader
-from os.path import exists
 from django.contrib.staticfiles.finders import find
 from django.core.management import BaseCommand
 
@@ -76,7 +74,7 @@ class Command(BaseCommand):
                     id=row[3]
                 ),
             )
-        
+
     def handle(self, *args, **options):
         for filename, model in MODELS.items():
             csv_file = find(f'data/{filename}.csv')

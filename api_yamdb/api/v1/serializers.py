@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.utils import timezone
 from rest_framework import serializers
 from rest_framework_simplejwt.tokens import AccessToken
 
@@ -64,14 +63,6 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class TitleSerializer(serializers.ModelSerializer):
     rating = serializers.IntegerField(read_only=True)
-
-    def validate_year(self, value):
-        current_year = timezone.now().year
-        if value > current_year:
-            raise serializers.ValidationError(
-                'Год выпуска не может быть больше текущего.',
-            )
-        return value
 
     class Meta:
         model = Title
