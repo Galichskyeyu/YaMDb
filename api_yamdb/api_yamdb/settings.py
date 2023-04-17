@@ -7,6 +7,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = get_random_secret_key()
 
+LENGTH = 256
+
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']

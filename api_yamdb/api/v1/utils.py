@@ -1,13 +1,13 @@
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.utils.crypto import get_random_string
+import uuid
 
 from users.models import User
 
 
 def get_confirmation_code():
-    chars = 'abcdefghijklmnopqrstuvwxyz0123456789!@#$%&*'
-    return get_random_string(20, chars)
+    return get_random_string(20, uuid.uuid4().hex)
 
 
 def send_confirmation_code(request):

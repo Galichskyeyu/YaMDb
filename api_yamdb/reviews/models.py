@@ -1,12 +1,13 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from api_yamdb.settings import LENGTH
 from reviews.validators import validate_year
 from users.models import User
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=LENGTH)
     slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
@@ -14,7 +15,7 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=LENGTH)
     slug = models.SlugField(max_length=50, unique=True)
 
     def __str__(self):
@@ -22,7 +23,7 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
-    name = models.TextField(max_length=256)
+    name = models.TextField(max_length=LENGTH)
     year = models.PositiveIntegerField(
         null=True,
         verbose_name='Год выпуска',
@@ -44,13 +45,14 @@ class Title(models.Model):
         null=True
     )
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
 
 class GenreTitle(models.Model):
-    """Связь жанра и тайтла."""
-
     genre = models.ForeignKey(
         Genre,
         on_delete=models.SET_NULL,
